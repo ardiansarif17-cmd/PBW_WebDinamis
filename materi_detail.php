@@ -5,36 +5,33 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
-$id = $_GET['id'] ?? 0;
+include 'koneksi.php';
+
+$id = $_GET['id'];
+
+$q = mysqli_query($koneksi, "
+    SELECT materi.*, kursus.judul AS nama_kursus
+    FROM materi
+    JOIN kursus ON materi.kursus_id = kursus.id
+    WHERE materi.id='$id'
+");
+
+$m = mysqli_fetch_assoc($q);
 ?>
 
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Materi</title>
-  <link rel="stylesheet" href="../assets/style.css">
+  <title><?= $m['judul'] ?></title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="halaman-user">
 
-  <div class="konten-user">
-    <a href="user_materi.php">← Kembali ke Materi</a>
+<h1><?= $m['judul'] ?></h1>
+<p><strong>Kursus:</strong> <?= $m['nama_kursus'] ?></p>
+<p><?= nl2br($m['deskripsi']) ?></p>
 
-    <h1>Materi ID: <?= htmlspecialchars($id) ?></h1>
-
-    <div class="card-materi">
-      <h3>cyberSecurity dasar</h3>
-      <p>Penjelasan lengkap materi di sini.</p>
-
-    <div class="video-wrapper">
-      <video controls>
-        <source src="images/konfigurasi_jaringan.mp4" type="video/mp4">
-      </video>
-    </div>
-
-
-    </div>
-  </div>
+<a href="user_materi.php">⬅ Kembali</a>
 
 </body>
 </html>
